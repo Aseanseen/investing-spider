@@ -1,0 +1,13 @@
+#!/bin/bash
+echo Please state name of scrapy project folder e.g. investing_scraper
+read project
+echo Please state the website e.g. https://www.investing.com/equities/enphase-energy-inc
+read website
+echo Please state the name of the output file, this will be a json file e.g. enphase
+read output_name
+echo Please state the save location for the output file. Note output file will be json  e.g. /home/user/Desktop
+read output_location
+echo Please state the location of the chrome driver e.g. /home/user/Downloads
+read driver
+cd $project/$project/spiders/
+scrapy crawl investing-spider -s USER_AGENT='Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0' -a link=$website -a driver=$driver/chromedriver -o $output_location/$output_name.json
