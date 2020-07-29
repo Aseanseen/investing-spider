@@ -37,16 +37,16 @@ class InvestingSpider(scrapy.Spider):
             revenue = self.driver.find_element(By.XPATH,'//*[text() = "Total Revenue"]/../../td[position()='+str(i)+']').text
             annualy_net_income.append(income)
             annualy_revenue.append(revenue)
-        yield {
+        results_dict = {
             'quarterly_net_income': quarterly_net_income,
             'annualy_net_income': annualy_net_income,
             'quarterly_revenue': quarterly_revenue,
             'annualy_revenue': annualy_revenue
             }
         self.driver.get(response.url[:-17] + "-balance-sheet")
-        yield (scrapy.Request(response.url[:-17] + "-balance-sheet",callback=self.parse_balance))
+        yield (scrapy.Request(response.url[:-17] + "-balance-sheet",callback=self.parse_balance,cb_kwargs=results_dict))
 
-    def parse_balance(self,response):
+    def parse_balance(self,response,**results_dict):
         quarterly_net_equity = response.xpath('//*[text() = "Total Equity"]/../../td[position()=2 or position()=3 or position()=4 or position()=5]/text()').getall()
         annual_button = self.driver.find_element_by_link_text('Annual')
         self.driver.execute_script('arguments[0].click()',annual_button)
@@ -60,14 +60,13 @@ class InvestingSpider(scrapy.Spider):
         for i in range(2,6):
             equity = self.driver.find_element(By.XPATH,'//*[text() = "Total Equity"]/../../td[position()='+str(i)+']').text
             annualy_net_equity.append(equity)
-        yield {
-            'quarterly_net_equity': quarterly_net_equity,
-            'annualy_net_equity': annualy_net_equity
-        }
-        self.driver.get(response.url[:-14] + "-cash-flow")
-        yield (scrapy.Request(response.url[:-14] + "-cash-flow",callback=self.parse_cash))
+        results_dict['quarterly_net_equity'] = quarterly_net_equity
+        results_dict['annualy_net_equity'] = annualy_net_equity
 
-    def parse_cash(self,response):
+        self.driver.get(response.url[:-14] + "-cash-flow")
+        yield (scrapy.Request(response.url[:-14] + "-cash-flow",callback=self.parse_cash,cb_kwargs=results_dict))
+
+    def parse_cash(self,response,**results_dict):
         quarterly_operating_cash = response.xpath('//*[text() = "Cash From Operating Activities"]/../../td[position()=2 or position()=3 or position()=4 or position()=5]/text()').getall()
         
         annual_button = self.driver.find_element_by_link_text('Annual')
@@ -82,8 +81,6 @@ class InvestingSpider(scrapy.Spider):
         for i in range(2,6):
             cash = self.driver.find_element(By.XPATH,'//*[text() = "Cash From Operating Activities"]/../../td[position()='+str(i)+']').text
             annualy_operating_cash.append(cash)
-        yield {
-            'quarterly_operating_cash': quarterly_operating_cash,
-            'annualy_operating_cash': annualy_operating_cash
-        }
-
+        results_dict['quarterly_operating_cash'] = quarterly_operating_cash
+        results_dict['annualy_operating_cash'] = annualy_operating_cash
+        yield results_dict
