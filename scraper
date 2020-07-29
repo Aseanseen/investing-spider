@@ -3,7 +3,7 @@ echo Please state name of scrapy project folder e.g. investing_scraper
 read project
 echo Please state the website e.g. https://www.investing.com/equities/enphase-energy-inc
 read website
-echo Please state the name of the output file, this will be a json file e.g. enphase
+echo Please state the name of the output file, this will be a json file
 read output_name
 echo Please state the save location for the output file. Note output file will be json  e.g. /home/user/Desktop
 read output_location
