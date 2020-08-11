@@ -8,8 +8,8 @@ Web scraper to get the financial numbers of a company
 4. In terminal, run the command './scraper'
 
 # Note
-This scraper was designed for investing.com\
+This scraper was designed for investing.com and yahoo finance\
 This was designed for linux systems\
-The most crucial file is /investing-spider/investing_scraper/investing_scraper/spiders/investing.py\
+The most crucial file that contains the spider is /investing-spider/investing_scraper/investing_scraper/spiders/my_investing.py\
 This file contains the scrapy + selenium code\
-The file scraper was designed to make input easier
+The file scraper is just bash code designed to make input easier
